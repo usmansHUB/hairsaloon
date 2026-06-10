@@ -26,11 +26,16 @@ const allowedOrigins = [
   'http://localhost:3000',
 ].filter(Boolean);
 
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  return /^(https:\/\/.*\.vercel\.app|https:\/\/.*\.netlify\.app|https:\/\/.*\.onrender\.com)$/i.test(origin);
+};
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, curl, etc.)
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (isAllowedOrigin(origin)) {
         callback(null, true);
       } else {
         callback(new Error(`CORS blocked for origin: ${origin}`));

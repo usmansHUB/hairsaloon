@@ -1,4 +1,4 @@
-const API = import.meta.env.VITE_API_URL || '/api';
+const API = (import.meta.env.VITE_API_URL || 'https://hairsaloon-mep0.onrender.com/api').replace(/\/$/, '');
 
 let tokenExpiredCallback = null;
 

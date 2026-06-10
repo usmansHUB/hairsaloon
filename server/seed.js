@@ -4,108 +4,10 @@ import { connectDB } from './config/db.js';
 import User from './models/User.js';
 import Service from './models/Service.js';
 import Stylist from './models/Stylist.js';
+import { seedAdminUser, seedServices, seedStylists } from './seedData.js';
 
-const services = [
-  {
-    name: 'Signature Cut & Style',
-    slug: 'signature-cut-style',
-    description: 'Precision cut tailored to your face shape, finished with a luxury blow-dry and styling.',
-    duration: 60,
-    price: 85,
-    category: 'cut',
-    image: '/images/services/signature-cut-style.webp',
-    featured: true,
-  },
-  {
-    name: 'Balayage & Color',
-    slug: 'balayage-color',
-    description: 'Hand-painted highlights for natural dimension, using premium ammonia-free color.',
-    duration: 180,
-    price: 220,
-    category: 'color',
-    image: '/images/services/balayage-color.webp',
-    featured: true,
-  },
-  {
-    name: 'Keratin Smoothing Treatment',
-    slug: 'keratin-smoothing',
-    description: 'Frizz-free, silky hair for up to 12 weeks with our professional keratin system.',
-    duration: 150,
-    price: 280,
-    category: 'treatment',
-    image: '/images/services/keratin-smoothing.webp',
-    featured: true,
-  },
-  {
-    name: 'Bridal Glam Package',
-    slug: 'bridal-glam',
-    description: 'Trial + wedding day styling with extensions consultation and long-lasting finish.',
-    duration: 120,
-    price: 350,
-    category: 'style',
-    image: '/images/services/bridal-glam.webp',
-    featured: false,
-  },
-  {
-    name: 'Beard Sculpt & Hot Towel',
-    slug: 'beard-sculpt',
-    description: 'Expert beard shaping, hot towel treatment, and nourishing oil finish.',
-    duration: 45,
-    price: 55,
-    category: 'grooming',
-    image: '/images/services/beard-sculpt.webp',
-    featured: false,
-  },
-  {
-    name: 'Deep Conditioning Ritual',
-    slug: 'deep-conditioning',
-    description: 'Restorative mask, scalp massage, and steam therapy for damaged or dry hair.',
-    duration: 75,
-    price: 95,
-    category: 'treatment',
-    image: '/images/services/deep-conditioning.webp',
-    featured: false,
-  },
-];
-
-const stylists = [
-  {
-    name: 'Aria Chen',
-    title: 'Master Colorist',
-    bio: 'Award-winning color specialist with 12 years crafting bespoke balayage and vivid tones.',
-    specialties: ['Balayage', 'Color Correction', 'Vivid Color'],
-    image: '/images/stylists/aria-chen.webp',
-    rating: 4.9,
-    yearsExperience: 12,
-  },
-  {
-    name: 'Marcus Reid',
-    title: 'Senior Stylist',
-    bio: 'Precision cutting expert known for modern textures and effortless everyday styles.',
-    specialties: ['Precision Cuts', 'Textured Styles', 'Men\'s Grooming'],
-    image: '/images/stylists/marcus-reid.webp',
-    rating: 4.8,
-    yearsExperience: 9,
-  },
-  {
-    name: 'Sofia Laurent',
-    title: 'Bridal & Editorial',
-    bio: 'Editorial stylist specializing in red-carpet looks and unforgettable bridal moments.',
-    specialties: ['Bridal', 'Updos', 'Editorial'],
-    image: '/images/stylists/sofia-laurent.webp',
-    rating: 5,
-    yearsExperience: 15,
-  },
-  {
-    name: 'James Okonkwo',
-    title: 'Treatment Specialist',
-    bio: 'Certified in advanced keratin and scalp therapies for transformative hair health.',
-    specialties: ['Keratin', 'Scalp Care', 'Extensions'],
-    image: '/images/stylists/james-okonkwo.webp',
-    rating: 4.9,
-    yearsExperience: 8,
-  },
-];
+const services = seedServices;
+const stylists = seedStylists;
 
 const seed = async () => {
   await connectDB();
@@ -114,13 +16,7 @@ const seed = async () => {
   await Service.insertMany(services);
   await Stylist.insertMany(stylists);
 
-  await User.create({
-    name: 'Salon Admin',
-    email: 'admin@luxehair.com',
-    password: 'admin123',
-    role: 'admin',
-    phone: '+1 555 0100',
-  });
+  await User.create(seedAdminUser);
 
   console.log('Database seeded successfully!');
   console.log('Admin login: admin@luxehair.com / admin123');

@@ -7,6 +7,10 @@ import authRoutes from './routes/authRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
 import stylistRoutes from './routes/stylistRoutes.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
+import Service from './models/Service.js';
+import Stylist from './models/Stylist.js';
+import User from './models/User.js';
+import { seedAdminUser, seedServices, seedStylists } from './seedData.js';
 
 // --- Validate required env vars ---
 const required = ['MONGODB_URI', 'JWT_SECRET'];
@@ -62,7 +66,30 @@ app.use('/api/appointments', appointmentRoutes);
 app.use(errorHandler);
 
 connectDB()
-  .then(() => {
+  .then(async () => {
+    try {
+      const [serviceCount, stylistCount, adminCount] = await Promise.all([
+        Service.countDocuments(),
+        Stylist.countDocuments(),
+        User.countDocuments({ role: 'admin' }),
+      ]);
+
+      if (serviceCount === 0) {
+        await Service.insertMany(seedServices);
+        console.log('Seeded services because the database was empty.');
+      }
+      if (stylistCount === 0) {
+        await Stylist.insertMany(seedStylists);
+        console.log('Seeded stylists because the database was empty.');
+      }
+      if (adminCount === 0) {
+        await User.create(seedAdminUser);
+        console.log('Seeded admin user because the database was empty.');
+      }
+    } catch (seedErr) {
+      console.error('Seed fallback failed:', seedErr.message);
+    }
+
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => {
